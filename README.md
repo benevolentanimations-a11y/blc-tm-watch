@@ -1,2 +1,2 @@
-# blc-tm-watch
+# index.html
 BLC Trademark Watch Platform
