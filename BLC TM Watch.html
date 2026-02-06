@@ -1269,6 +1269,12 @@ async function apiCall(endpoint, method = 'GET', data =
                 </tr>
             `).join('');
         }
+function updateConflictsList() {
+  const container = document.getElementById('conflictsList');
+  if (conflicts.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div
 
         function generateDemoConflicts(journal) {
             if (portfolioMarks.length === 0) return;
@@ -1312,65 +1318,6 @@ async function apiCall(endpoint, method = 'GET', data =
             conflicts.push(...demoConflicts);
             updateConflictsList();
         }
-
-        function updateConflictsList() {
-            const container = document.getElementById('conflictsList');
-            if (conflicts.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔍</div><p>No conflicts detected yet.</p></div>`;
-                return;
-            }
-
-            container.innerHTML = conflicts.map(conflict => `
-                <div class="card" style="margin-bottom: 1rem; cursor: pointer;" onclick="viewConflictDetail(${conflict.id})">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                <strong style="font-size: 1.1rem;">${conflict.markText}</strong>
-                                <span class="badge badge-${conflict.riskLevel === 'high' ? 'danger' : conflict.riskLevel === 'medium' ? 'warning' : 'info'}">
-                                    ${conflict.riskLevel.toUpperCase()} RISK
-                                </span>
-                            </div>
-                            <p style="color: var(--color-text-secondary); font-size: 0.875rem; margin: 0.25rem 0;">
-                                Applicant: ${conflict.applicant} | App No: ${conflict.applicationNo}
-                            </p>
-                            <p style="color: var(--color-text-secondary); font-size: 0.875rem; margin: 0.25rem 0;">
-                                Class ${conflict.class} | Journal: ${conflict.journalDate}
-                            </p>
-                        </div>
-                        <div style="text-align: right; min-width: 100px;">
-                            <div style="font-size: 1.5rem; font-weight: 600; color: ${conflict.combinedScore >= 0.8 ? 'var(--color-danger)' : 'var(--color-warning)'};">
-                                ${Math.round(conflict.combinedScore * 100)}%
-                            </div>
-                            <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Match</div>
-                        </div>
-                    </div>
-                    <div class="similarity-bars">
-                        <div class="similarity-bar">
-                            <span class="similarity-label">Visual</span>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${conflict.visualScore * 100}%;"></div>
-                            </div>
-                            <span class="similarity-score">${Math.round(conflict.visualScore * 100)}%</span>
-                        </div>
-                        <div class="similarity-bar">
-                            <span class="similarity-label">Phonetic</span>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${conflict.phoneticScore * 100}%;"></div>
-                            </div>
-                            <span class="similarity-score">${Math.round(conflict.phoneticScore * 100)}%</span>
-                        </div>
-                        <div class="similarity-bar">
-                            <span class="similarity-label">Semantic</span>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${conflict.semanticScore * 100}%;"></div>
-                            </div>
-                            <span class="similarity-score">${Math.round(conflict.semanticScore * 100)}%</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
         function viewConflictDetail(id) {
             currentConflict = conflicts.find(c => c.id === id);
             if (!currentConflict) return;
